@@ -21,7 +21,25 @@ A arquitetura publish/subscribe (pub/sub) é um padrão de comunicação onde os
 4. Confirma ou rejeita mensagens
 
 ## Inicialização de Broker RabbitMQ via código .NET
-No código apresentado no repositório, no projeto "PubSubRabbitMQ.Publisher" é realizada a inicialização das filas, exchanges e bindings utilizando a biblioteca RabbitMQ.Client
+No código apresentado no repositório, no projeto "PubSubRabbitMQ.Publisher" é realizada a inicialização das filas, exchanges e bindings utilizando a biblioteca "RabbitMQ.Client".
+São utilizados conceitos de inversão de dependência e injeção de dependência.
+
+#### Objetos representados:
+* Customer
+* Log
+
+São inicializadas filas e exchanges para dois fluxos, um de criação de um objeto "Customer" e outro fluxo para geração de logs.
+
+#### Fluxo do código:
+1. Inicialização de fila e exchange para criação de Customer, a exchange é tipo "direct".
+2. Inicialização de filas e exchange, sendo duas "Dead-Letter Queues" (rejected e expired), e uma "Dead-Letter Exchange" tipo "headers".
+3. Inicialização de filas e exchange para criação de Log (Log-All e Log-Customer), a exchange é tipo "topic".
+4. Inicialização de filas e exchange, sendo duas "Dead-Letter Queues" (rejected e expired), e uma "Dead-Letter Exchange" tipo "headers".
+
+#### Dead-Letter:
+São utilizadas exchanges "Dead-Letter" e filas para armazenar essas mensagens, serão consumidas mensagens rejeitadas ou expiradas (ttl).
+
+
 
 
 ![Imagem arquitetura RabbitMQ](https://github.com/eduardocaas/.NET_RabbitMQ/blob/main/img/Arq_RabbitMQ.png?raw=true)
